@@ -1,18 +1,23 @@
 import dto.CreateAndAuthUserResponse;
+import dto.GettingIngredientsRequest;
+import dto.Ingredient;
 import dto.User;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import java.util.ArrayList;
+
 import static io.restassured.RestAssured.given;
 
 public class BaseTest {
     public static RequestSpecification specification;
-    public static final String email = "troyan2@gmail.com";
+    public static ArrayList<Ingredient> ingredients = new ArrayList<>();
+    public static final String email = "troyan6@gmail.com";
     public static final String password = "12345";
     public static final String name = "ksyusha";
-    static String token;
+    public static String token;
 
     @BeforeClass
     public static void createUser() {
@@ -36,6 +41,11 @@ public class BaseTest {
                 .body(user2)
                 .when()
                 .post("/api/auth/register");
+
+        GettingIngredientsRequest ingredientsData =
+                given().spec(specification)
+                        .get("/api/ingredients").body().as(GettingIngredientsRequest.class);
+        ingredients = ingredientsData.getData();
     }
 
     @AfterClass
