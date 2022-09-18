@@ -13,7 +13,7 @@ public class ChangeUserDataTest extends BaseTest {
         user.setName(newUserName);
         given().spec(specification)
                 .body(user)
-                .header("Authorization", token)
+                .header("Authorization", tokenUser1)
                 .when()
                 .patch("/api/auth/user")
                 .then()
@@ -28,7 +28,7 @@ public class ChangeUserDataTest extends BaseTest {
         user.setEmail(newUserEmail);
         given().spec(specification)
                 .body(user)
-                .header("Authorization", token)
+                .header("Authorization", tokenUser1)
                 .when()
                 .patch("/api/auth/user")
                 .then()
@@ -56,7 +56,7 @@ public class ChangeUserDataTest extends BaseTest {
         user.setEmail("troyan77@gmail.com");
         given().spec(specification)
                 .body(user)
-                .header("Authorization", token)
+                .header("Authorization", tokenUser1)
                 .when()
                 .patch("/api/auth/user")
                 .then()

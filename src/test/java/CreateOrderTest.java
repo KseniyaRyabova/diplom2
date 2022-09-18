@@ -19,7 +19,7 @@ public class CreateOrderTest extends BaseTest {
 
         given().spec(specification)
                 .body(request)
-                .header("Authorization", token)
+                .header("Authorization", tokenUser1)
                 .when()
                 .post("/api/orders")
                 .then()
@@ -49,7 +49,7 @@ public class CreateOrderTest extends BaseTest {
     public void createOrderWithoutIngredientsTest() {
         given().spec(specification)
                 .body("")
-                .header("Authorization", token)
+                .header("Authorization", tokenUser1)
                 .when()
                 .post("/api/orders")
                 .then()
@@ -65,7 +65,7 @@ public class CreateOrderTest extends BaseTest {
         request.getIngredients().add(ingredient);
         given().spec(specification)
                 .body(request)
-                .header("Authorization", token)
+                .header("Authorization", tokenUser1)
                 .when()
                 .post("/api/orders")
                 .then()

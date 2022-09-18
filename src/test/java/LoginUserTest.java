@@ -1,7 +1,4 @@
-import dto.CreateAndAuthUserResponse;
 import dto.User;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -21,8 +18,8 @@ public class LoginUserTest extends BaseTest {
                 .statusCode(200)
                 .body("success", equalTo(true))
                 .body("accessToken", notNullValue())
-        .body("refreshToken", notNullValue())
-        .body("user.name", equalTo("ksyusha"));
+                .body("refreshToken", notNullValue())
+                .body("user.name", equalTo("ksyusha"));
     }
 
 }
