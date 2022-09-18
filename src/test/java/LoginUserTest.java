@@ -8,8 +8,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-
-public class CreateUserTest extends BaseTest {
+public class LoginUserTest extends BaseTest {
 
     private static final String email = "troyan2@gmail.com";
     private static final String password = "12345";
@@ -33,9 +32,9 @@ public class CreateUserTest extends BaseTest {
         User user = new User(email, password, name);
         CreateAndAuthUserResponse response =
                 given().spec(specification)
-                .body(user)
-                .post("/api/auth/login")
-                .body().as(CreateAndAuthUserResponse.class);
+                        .body(user)
+                        .post("/api/auth/login")
+                        .body().as(CreateAndAuthUserResponse.class);
         token = response.getAccessToken();
 
         given().spec(specification)
@@ -47,40 +46,18 @@ public class CreateUserTest extends BaseTest {
     }
 
     @Test
-    public void createUserWithoutAttr() {
-        User user = new User();
+    public void singInWithValidData() {
+        User user = new User(email, password);
         given().spec(specification)
                 .body(user)
                 .when()
-                .post("/api/auth/register")
+                .post("/api/auth/login")
                 .then()
-                .statusCode(403)
-                .body("message", equalTo("Email, password and name are required fields"));
+                .statusCode(200)
+                .body("success", equalTo(true))
+                .body("accessToken", notNullValue())
+        .body("refreshToken", notNullValue())
+        .body("user.name", equalTo("ksyusha"));
     }
-
-    @Test
-    public void createUserWithoutOneAttribute() {
-        User user = new User(email, name);
-        given().spec(specification)
-                .body(user)
-                .when()
-                .post("/api/auth/register")
-                .then()
-                .statusCode(403)
-                .body("message", equalTo("Email, password and name are required fields"));
-    }
-
-    @Test
-    public void createRepeatUser() {
-        User user = new User(email, password, name);
-        given().spec(specification)
-                .body(user)
-                .when()
-                .post("/api/auth/register")
-                .then()
-                .statusCode(403)
-                .body("message", equalTo("User already exists"));
-    }
-
 
 }
