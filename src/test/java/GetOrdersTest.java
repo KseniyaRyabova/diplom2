@@ -8,7 +8,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class GettingOrdersTest extends BaseTest {
+public class GetOrdersTest extends BaseTest {
     public static final String email = ((int)(Math.random()*100))+"troyan100197643@gmail.com" + (int)(Math.random()*100);
     public static final String password = "12345";
     public static final String name = "ksyusha";
@@ -22,7 +22,7 @@ public class GettingOrdersTest extends BaseTest {
                 given().spec(specification)
                         .body(user)
                         .when()
-                        .post("/api/auth/register")
+                        .post(registerUrl)
                         .body().as(CreateAndAuthUserResponse.class);
         tokenUser1 = responseUser1.getAccessToken();
     }
@@ -32,7 +32,7 @@ public class GettingOrdersTest extends BaseTest {
         given().spec(specification)
                 .header("Authorization", tokenUser1)
                 .when()
-                .delete("api/auth/user")
+                .delete(authUrl)
                 .then()
                 .statusCode(202);
     }
@@ -42,7 +42,7 @@ public class GettingOrdersTest extends BaseTest {
     public void getAuthUserOrders() {
         given().spec(specification)
                 .header("Authorization", tokenUser1)
-                .get("/api/orders")
+                .get(ordersUrl)
                 .then()
                 .statusCode(200)
                 .body("success", equalTo(true))
@@ -52,7 +52,7 @@ public class GettingOrdersTest extends BaseTest {
     @Test
     public void getNotAuthUserOrders() {
         given().spec(specification)
-                .get("/api/orders")
+                .get(ordersUrl)
                 .then()
                 .statusCode(401)
                 .body("success", equalTo(false))

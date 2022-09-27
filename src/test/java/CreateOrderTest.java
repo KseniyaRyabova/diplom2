@@ -23,7 +23,7 @@ public class CreateOrderTest extends BaseTest {
                 given().spec(specification)
                         .body(user)
                         .when()
-                        .post("/api/auth/register")
+                        .post(registerUrl)
                         .body().as(CreateAndAuthUserResponse.class);
         tokenUser1 = responseUser1.getAccessToken();
         usersTokens.add(tokenUser1);
@@ -31,7 +31,7 @@ public class CreateOrderTest extends BaseTest {
         //получение списка всех ингрдиентов
         GetIngredientsRequest ingredientsData =
                 given().spec(specification)
-                        .get("/api/ingredients").body().as(GetIngredientsRequest.class);
+                        .get(ingredientUrl).body().as(GetIngredientsRequest.class);
         ingredients = ingredientsData.getData();
     }
 
@@ -40,7 +40,7 @@ public class CreateOrderTest extends BaseTest {
         given().spec(specification)
                 .header("Authorization", tokenUser1)
                 .when()
-                .delete("api/auth/user")
+                .delete(authUrl)
                 .then()
                 .statusCode(202);
     }
@@ -54,7 +54,7 @@ public class CreateOrderTest extends BaseTest {
                 .body(request)
                 .header("Authorization", tokenUser1)
                 .when()
-                .post("/api/orders")
+                .post(ordersUrl)
                 .then()
                 .statusCode(200)
                 .body("success", equalTo(true));
@@ -69,7 +69,7 @@ public class CreateOrderTest extends BaseTest {
         given().spec(specification)
                 .body(request)
                 .when()
-                .post("/api/orders")
+                .post(ordersUrl)
                 .then()
                 .statusCode(200)
                 .body("success", equalTo(true));
@@ -81,7 +81,7 @@ public class CreateOrderTest extends BaseTest {
                 .body("")
                 .header("Authorization", tokenUser1)
                 .when()
-                .post("/api/orders")
+                .post(ordersUrl)
                 .then()
                 .statusCode(400)
                 .body("success", equalTo(false))
@@ -97,7 +97,7 @@ public class CreateOrderTest extends BaseTest {
                 .body(request)
                 .header("Authorization", tokenUser1)
                 .when()
-                .post("/api/orders")
+                .post(ordersUrl)
                 .then()
                 .statusCode(500);
     }

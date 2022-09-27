@@ -22,7 +22,7 @@ public class LoginUserTest extends BaseTest {
                 given().spec(specification)
                         .body(user)
                         .when()
-                        .post("/api/auth/register")
+                        .post(registerUrl)
                         .body().as(CreateAndAuthUserResponse.class);
         tokenUser1 = responseUser1.getAccessToken();
     }
@@ -32,7 +32,7 @@ public class LoginUserTest extends BaseTest {
         given().spec(specification)
                 .header("Authorization", tokenUser1)
                 .when()
-                .delete("api/auth/user")
+                .delete(authUrl)
                 .then()
                 .statusCode(202);
     }
@@ -43,7 +43,7 @@ public class LoginUserTest extends BaseTest {
         given().spec(specification)
                 .body(user)
                 .when()
-                .post("/api/auth/login")
+                .post(loginUrl)
                 .then()
                 .statusCode(200)
                 .body("success", equalTo(true))
@@ -58,7 +58,7 @@ public class LoginUserTest extends BaseTest {
         given().spec(specification)
                 .body(user)
                 .when()
-                .post("/api/auth/login")
+                .post(loginUrl)
                 .then()
                 .statusCode(401)
                 .body("success", equalTo(false))

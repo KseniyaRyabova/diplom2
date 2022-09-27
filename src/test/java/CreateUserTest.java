@@ -23,7 +23,7 @@ public class CreateUserTest extends BaseTest {
                 given().spec(specification)
                         .body(user)
                         .when()
-                        .post("/api/auth/register")
+                        .post(registerUrl)
                         .body().as(CreateAndAuthUserResponse.class);
         tokenUser1 = responseUser1.getAccessToken();
     }
@@ -33,7 +33,7 @@ public class CreateUserTest extends BaseTest {
         given().spec(specification)
                 .header("Authorization", tokenUser1)
                 .when()
-                .delete("api/auth/user")
+                .delete(authUrl)
                 .then()
                 .statusCode(202);
     }
@@ -44,7 +44,7 @@ public class CreateUserTest extends BaseTest {
         given().spec(specification)
                 .body(user)
                 .when()
-                .post("/api/auth/register")
+                .post(registerUrl)
                 .then()
                 .statusCode(403)
                 .body("message", equalTo("Email, password and name are required fields"));
@@ -56,7 +56,7 @@ public class CreateUserTest extends BaseTest {
         given().spec(specification)
                 .body(user)
                 .when()
-                .post("/api/auth/register")
+                .post(registerUrl)
                 .then()
                 .statusCode(403)
                 .body("message", equalTo("Email, password and name are required fields"));
@@ -68,7 +68,7 @@ public class CreateUserTest extends BaseTest {
         given().spec(specification)
                 .body(user)
                 .when()
-                .post("/api/auth/register")
+                .post(registerUrl)
                 .then()
                 .statusCode(403)
                 .body("message", equalTo("User already exists"));
