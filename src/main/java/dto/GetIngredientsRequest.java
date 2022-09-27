@@ -2,10 +2,10 @@ package dto;
 
 import java.util.ArrayList;
 
-public class GettingIngredientsRequest {
+public class GetIngredientsRequest {
     private ArrayList<Ingredient> data;
 
-    public GettingIngredientsRequest(ArrayList<Ingredient> data) {
+    public GetIngredientsRequest(ArrayList<Ingredient> data) {
         this.data = data;
     }
 

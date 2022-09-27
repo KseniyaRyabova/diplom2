@@ -29,9 +29,9 @@ public class CreateOrderTest extends BaseTest {
         usersTokens.add(tokenUser1);
 
         //получение списка всех ингрдиентов
-        GettingIngredientsRequest ingredientsData =
+        GetIngredientsRequest ingredientsData =
                 given().spec(specification)
-                        .get("/api/ingredients").body().as(GettingIngredientsRequest.class);
+                        .get("/api/ingredients").body().as(GetIngredientsRequest.class);
         ingredients = ingredientsData.getData();
     }
 
