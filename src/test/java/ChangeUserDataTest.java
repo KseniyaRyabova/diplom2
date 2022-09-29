@@ -15,7 +15,7 @@ public class ChangeUserDataTest extends BaseTest {
 
     public static UserClient userClient = new UserClient(specification);
 
-    static String generatedString = RandomStringUtils.random(20, true, true);
+    static String generatedString = RandomStringUtils.random(20, false, true);
     public static String emailAuth = generatedString.concat("@gmail.com");
     public static String email = generatedString.concat("0@gmail.com");
 

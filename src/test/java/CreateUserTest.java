@@ -14,9 +14,9 @@ public class CreateUserTest extends BaseTest {
 
     public static UserClient userClient = new UserClient(specification);
 
-    public static String generatedString = RandomStringUtils.random(20, true, true);
-    public static String emailAuth = generatedString.concat("@gmail.com");
-    public static String email = generatedString.concat("a@gmail.com");
+    public static String generatedString = RandomStringUtils.random(20, false, true);
+    public static String emailAuth = generatedString.concat("ldfd@gmail.com");
+    public static String email = generatedString.concat("gfh@gmail.com");
 
     static User user1 = new User(email, password, name);
     static User user2 = new User(emailAuth, password, name);

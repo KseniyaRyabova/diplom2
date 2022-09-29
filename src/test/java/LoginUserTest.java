@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class LoginUserTest extends BaseTest {
 
-    public static String generatedString = RandomStringUtils.random(20, true, true);
+    public static String generatedString = RandomStringUtils.random(20, false, true);
     public static String email = generatedString.concat("a@gmail.com");
 
     public static User user1 = new User(email, password, name);

@@ -1,16 +1,18 @@
 import dto.User;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.*;
 
 public class GetOrdersTest extends BaseTest {
 
-    public static String generatedString = RandomStringUtils.random(20, true, true);
-    public static String email = generatedString.concat("@gmail.com");
+    public static String generatedString = RandomStringUtils.random(20, false, true);
+    public static String email = generatedString.concat("oom@gmail.com");
 
     public static User user1 = new User(email, password, name);
     public static String tokenUser1;
@@ -31,7 +33,7 @@ public class GetOrdersTest extends BaseTest {
                 .then()
                 .statusCode(200)
                 .body("success", equalTo(true))
-                .body("orders", notNullValue());
+                .body("orders", instanceOf(ArrayList.class));
     }
 
     @Test

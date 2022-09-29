@@ -18,7 +18,7 @@ public class CreateOrderTest extends BaseTest {
     public static ArrayList<Ingredient> ingredients = new ArrayList<>();
     public static CreateOrderRequest request;
 
-    public static String generatedString = RandomStringUtils.random(20, true, true);
+    public static String generatedString = RandomStringUtils.random(20, false, true);
     public static String email = generatedString.concat("a@gmail.com");
 
     public static User user1 = new User(email, password, name);
