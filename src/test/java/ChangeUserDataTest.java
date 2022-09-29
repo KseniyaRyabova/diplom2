@@ -1,5 +1,7 @@
+import api.OrderClient;
 import api.UserClient;
 import dto.User;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -9,21 +11,25 @@ import java.util.ArrayList;
 import static org.hamcrest.Matchers.equalTo;
 
 public class ChangeUserDataTest extends BaseTest {
-    public static final String email = ((int) (Math.random() * 10000)) + "troyan101013@gmail.com" + ((int) (Math.random() * 10000));
-    public static final String password = "12345";
-    public static final String name = "ksyusha";
-    public static final String emailAuth = ((int) (Math.random() * 10000)) + "troyan1005610@gmail.com";
+    public static ArrayList<String> usersTokens = new ArrayList<>();
+
+    public static UserClient userClient = new UserClient(specification);
+
+    static String generatedString = RandomStringUtils.random(20, true, true);
+    public static String emailAuth = generatedString.concat("@gmail.com");
+    public static String email = generatedString.concat("0@gmail.com");
+
     public static String tokenUser1;
     public static String tokenUser2;
-    static ArrayList<String> usersTokens = new ArrayList<>();
-    static UserClient userClient = new UserClient(specification);
+
+    static User user1 = new User(email, password, name);
+    static User user2 = new User(emailAuth, password, name);
 
     @BeforeClass
     public static void initData() {
-        //создание тестовых данных: пользователи
-        tokenUser1 = userClient.createUser(email, password, name);
+        tokenUser1 = userClient.getToken(user1);
+        tokenUser2 = userClient.getToken(user2);
         usersTokens.add(tokenUser1);
-        tokenUser2 = userClient.createUser(emailAuth, password, name);
         usersTokens.add(tokenUser2);
     }
 
@@ -37,7 +43,6 @@ public class ChangeUserDataTest extends BaseTest {
     @Test
     public void changeNameAuthUserTest() {
         UserClient userClient = new UserClient(specification);
-
         User user = new User(email, password);
         String newUserName = "newName";
         user.setName(newUserName);
@@ -45,9 +50,9 @@ public class ChangeUserDataTest extends BaseTest {
         String dataType = "user.name";
 
         userClient.changeUserData(user, tokenUser1)
-        .then()
-        .statusCode(200)
-        .body(dataType, equalTo(newUserName));
+                .then()
+                .statusCode(200)
+                .body(dataType, equalTo(newUserName));
     }
 
     @Test
@@ -55,7 +60,7 @@ public class ChangeUserDataTest extends BaseTest {
         UserClient userClient = new UserClient(specification);
 
         User user = new User(email, password);
-        String newUserEmail = "new.mail@email.com";
+        String newUserEmail = "new.mail@email.com+1";
         user.setEmail(newUserEmail);
 
         String dataType = "user.email";
@@ -78,23 +83,23 @@ public class ChangeUserDataTest extends BaseTest {
         String messageText = "You should be authorised";
 
         userClient.changeUserData(user, "")
-        .then()
-        .statusCode(401)
-        .body(message, equalTo(messageText));
+                .then()
+                .statusCode(401)
+                .body(message, equalTo(messageText));
     }
 
     @Test
     public void changeAuthUserExistEmailTest() {
+        UserClient userClient = new UserClient(specification);
         User user = new User(email, password);
         user.setEmail(emailAuth);
 
         String message = "message";
         String messageText = "User with such email already exists";
 
-        UserClient userClient = new UserClient(specification);
         userClient.changeUserData(user, tokenUser1)
-        .then()
-        .statusCode(403)
-        .body(message, equalTo(messageText));
+                .then()
+                .statusCode(403)
+                .body(message, equalTo(messageText));
     }
 }

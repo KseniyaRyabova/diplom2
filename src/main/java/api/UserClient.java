@@ -5,49 +5,56 @@ import dto.User;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-import java.util.Map;
-
+import static api.Api.*;
 import static io.restassured.RestAssured.given;
 
 public class UserClient {
-    public static final String registerUrl = "/api/auth/register";
-    public static final String authUrl = "api/auth/user";
-    private final RequestSpecification specification;
 
-    Response response;
+    RequestSpecification specification;
 
     public UserClient(RequestSpecification specification) {
         this.specification = specification;
     }
 
-    public String createUser(String email, String password, String name) {
-        User user = new User(email, password, name);
+    public String getToken(User user) {
         CreateAndAuthUserResponse response =
                 given().spec(specification)
                         .body(user)
                         .when()
-                        .post(registerUrl)
+                        .post(REGISTER_USER.path)
                         .body().as(CreateAndAuthUserResponse.class);
         return response.getAccessToken();
+    }
 
+    public Response createUser(User user) {
+        return given().spec(specification)
+                .body(user)
+                .when()
+                .post(REGISTER_USER.path);
     }
 
     public void deleteCurrentUser(String token) {
         given().spec(specification)
                 .header("Authorization", token)
                 .when()
-                .delete(authUrl)
+                .delete(USER_DATA.path)
                 .then()
                 .statusCode(202);
     }
 
     public Response changeUserData(User user, String token) {
-        response = given().spec(specification)
+        return given().spec(specification)
                 .body(user)
                 .header("Authorization", token)
                 .when()
-                .patch(authUrl);
-        return response;
+                .patch(USER_DATA.path);
+    }
+
+    public Response authUser(User user) {
+        return given().spec(specification)
+                .body(user)
+                .when()
+                .post(LOGIN.path);
     }
 }
 

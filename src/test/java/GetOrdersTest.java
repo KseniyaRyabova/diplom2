@@ -1,48 +1,33 @@
-import dto.CreateAndAuthUserResponse;
 import dto.User;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class GetOrdersTest extends BaseTest {
-    public static final String email = ((int)(Math.random()*100))+"troyan100197643@gmail.com" + (int)(Math.random()*100);
-    public static final String password = "12345";
-    public static final String name = "ksyusha";
+
+    public static String generatedString = RandomStringUtils.random(20, true, true);
+    public static String email = generatedString.concat("@gmail.com");
+
+    public static User user1 = new User(email, password, name);
     public static String tokenUser1;
 
     @BeforeClass
     public static void initData() {
-        //создание тестового юзера
-        User user = new User(email, password, name);
-        CreateAndAuthUserResponse responseUser1 =
-                given().spec(specification)
-                        .body(user)
-                        .when()
-                        .post(registerUrl)
-                        .body().as(CreateAndAuthUserResponse.class);
-        tokenUser1 = responseUser1.getAccessToken();
+        tokenUser1 = userClient.getToken(user1);
     }
 
     @AfterClass
     public static void deleteUser() {
-        given().spec(specification)
-                .header("Authorization", tokenUser1)
-                .when()
-                .delete(authUrl)
-                .then()
-                .statusCode(202);
+        userClient.deleteCurrentUser(tokenUser1);
     }
-
 
     @Test
     public void getAuthUserOrders() {
-        given().spec(specification)
-                .header("Authorization", tokenUser1)
-                .get(ordersUrl)
+        orderClient.getOrders(tokenUser1)
                 .then()
                 .statusCode(200)
                 .body("success", equalTo(true))
@@ -51,8 +36,7 @@ public class GetOrdersTest extends BaseTest {
 
     @Test
     public void getNotAuthUserOrders() {
-        given().spec(specification)
-                .get(ordersUrl)
+        orderClient.getOrders("")
                 .then()
                 .statusCode(401)
                 .body("success", equalTo(false))
