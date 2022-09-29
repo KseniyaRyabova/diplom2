@@ -5,7 +5,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Map;
+
+import static org.hamcrest.Matchers.equalTo;
 
 public class ChangeUserDataTest extends BaseTest {
     public static final String email = ((int) (Math.random() * 10000)) + "troyan101013@gmail.com" + ((int) (Math.random() * 10000));
@@ -35,41 +36,51 @@ public class ChangeUserDataTest extends BaseTest {
 
     @Test
     public void changeNameAuthUserTest() {
+        UserClient userClient = new UserClient(specification);
+
         User user = new User(email, password);
         String newUserName = "newName";
         user.setName(newUserName);
-        String dataType = "name";
-        Map<String, String> bodyResponse = Map.of(dataType, newUserName);
-        UserClient userClient = new UserClient(specification, 200, bodyResponse);
-        userClient.changeUserData(user, tokenUser1, dataType);
+
+        String dataType = "user.name";
+
+        userClient.changeUserData(user, tokenUser1)
+        .then()
+        .statusCode(200)
+        .body(dataType, equalTo(newUserName));
     }
 
     @Test
     public void changeEmailAuthUserTest() {
+        UserClient userClient = new UserClient(specification);
+
         User user = new User(email, password);
         String newUserEmail = "new.mail@email.com";
         user.setEmail(newUserEmail);
 
-        String dataType = "email";
-        Map<String, String> bodyResponse = Map.of(dataType, newUserEmail);
+        String dataType = "user.email";
 
-        UserClient userClient = new UserClient(specification, 200, bodyResponse);
-        userClient.changeUserData(user, tokenUser1, dataType);
+        userClient.changeUserData(user, tokenUser1)
+                .then()
+                .statusCode(200)
+                .body(dataType, equalTo(newUserEmail));
     }
 
     @Test
     public void changeNotAuthUserTest() {
+        UserClient userClient = new UserClient(specification);
+
         User user = new User(email, password);
         String newUserName = "newName";
         user.setName(newUserName);
 
-        String dataType = "name";
-        String attr = "message";
-        String attrValue = "You should be authorised";
+        String message = "message";
+        String messageText = "You should be authorised";
 
-        Map<String, String> bodyResponse = Map.of(attr, attrValue);
-        UserClient userClient = new UserClient(specification, 401, bodyResponse);
-        userClient.changeUserData(user, "", dataType);
+        userClient.changeUserData(user, "")
+        .then()
+        .statusCode(401)
+        .body(message, equalTo(messageText));
     }
 
     @Test
@@ -77,12 +88,13 @@ public class ChangeUserDataTest extends BaseTest {
         User user = new User(email, password);
         user.setEmail(emailAuth);
 
-        String dataType = "email";
-        String attr = "message";
-        String attrValue = "User with such email already exists";
+        String message = "message";
+        String messageText = "User with such email already exists";
 
-        Map<String, String> bodyResponse = Map.of(attr, attrValue);
-        UserClient userClient = new UserClient(specification, 403, bodyResponse);
-        userClient.changeUserData(user, tokenUser1, dataType);
+        UserClient userClient = new UserClient(specification);
+        userClient.changeUserData(user, tokenUser1)
+        .then()
+        .statusCode(403)
+        .body(message, equalTo(messageText));
     }
 }
